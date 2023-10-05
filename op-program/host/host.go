@@ -35,7 +35,7 @@ func Main(logger log.Logger, cfg *config.Config) error {
 		return fmt.Errorf("invalid config: %w", err)
 	}
 	opservice.ValidateEnvVars(flags.EnvVarPrefix, flags.Flags, logger)
-	cfg.Rollup.LogDescription(logger, chaincfg.L2ChainIDToNetworkDisplayName)
+	cfg.Rollup.LogDescription(logger, chaincfg.L2ChainIDToNetworkName)
 
 	ctx := context.Background()
 	if cfg.ServerMode {
@@ -239,7 +239,7 @@ func launchOracleServer(logger log.Logger, pHostRW io.ReadWriteCloser, getter pr
 	go func() {
 		defer close(chErr)
 		for {
-			if err := server.NextPreimageRequest(getter); err != nil {
+			if err := server.NextPreimageRequest(getter, logger); err != nil {
 				if err == io.EOF || errors.Is(err, fs.ErrClosed) {
 					logger.Debug("closing pre-image server")
 					return

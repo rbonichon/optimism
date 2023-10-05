@@ -5,6 +5,8 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
+
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // OracleClient implements the Oracle by writing the pre-image key to the given stream,
@@ -48,14 +50,17 @@ func NewOracleServer(rw io.ReadWriter) *OracleServer {
 
 type PreimageGetter func(key [32]byte) ([]byte, error)
 
-func (o *OracleServer) NextPreimageRequest(getPreimage PreimageGetter) error {
+func (o *OracleServer) NextPreimageRequest(getPreimage PreimageGetter, logger log.Logger) error {
 	var key [32]byte
+
 	if _, err := io.ReadFull(o.rw, key[:]); err != nil {
 		if err == io.EOF {
 			return io.EOF
 		}
 		return fmt.Errorf("failed to read requested pre-image key: %w", err)
 	}
+
+	logger.Debug(fmt.Sprintf("Get preimage: %s", hex.EncodeToString(key[:])))
 	value, err := getPreimage(key)
 	if err != nil {
 		return fmt.Errorf("failed to serve pre-image %s request: %w", hex.EncodeToString(key[:]), err)
