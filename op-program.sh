@@ -5,8 +5,9 @@ make op-program
 
 CAST="/Users/richard/foundry-nightly-5be158ba6dc7c798a6f032026fe60fc01686b33b/target/debug/cast"
 
-L1RPC=${1:-"https://goerli.infura.io/v3/c93c98740a924a38b03f5a9a8700635c"}
-L2RPC=${2:-"https://optimism-goerli.infura.io/v3/c93c98740a924a38b03f5a9a8700635c"}
+L1RPC=${1:-"http://65.108.142.23:19545"}
+L2RPC=${2:-"http://65.108.142.23:8545"}
+
 L2_OUTPUT_ORACLE=0xE6Dfba0953616Bacab0c9A8ecb3a9BBa77FC15c0
 
 
@@ -52,4 +53,4 @@ NETWORK=${4:-goerli}
     --l2.head $L2_HEAD \
     --l2.outputroot $STARTING_OUTPUT_ROOT \
     --l2.claim $L2_CLAIM \
-    --l2.blocknumber $L2_BLOCK_NUMBER
+    --l2.blocknumber $L2_BLOCK_NUMBER --server
